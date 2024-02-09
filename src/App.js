@@ -8,10 +8,16 @@ function App() {
   const addItem = (item) => {
     setItems((curItems) => [...curItems, item]);
   }
+  const deleteItem = (item) => {
+    setItems(curItems => {
+      return [...curItems].filter(it => it !== item);
+    })
+  }
   return (
     <div className='app'>
       <Logo />
       <AddForm onAdd={addItem} />
+      <List items={items} onDelete={deleteItem} />
     </div>);
 
 }
