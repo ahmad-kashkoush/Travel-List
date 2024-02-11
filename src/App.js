@@ -9,26 +9,27 @@ function App() {
     { amount: 5, name: "Said", id: 2, packed: false },
     { amount: 1, name: "Zeid", id: 3, packed: true }
   ]);
-  const addItem = (item) => {
+  function addItem(item) {
     item.id = items.length + 1;
     setItems((curItems) => [...curItems, item]);
   }
-  const deleteItem = (item) => {
-    setItems(curItems => {
-      return [...curItems].filter(it => it !== item);
-    })
+  function deleteItem(item) {
+    setItems(curItems => curItems.filter(it => it !== item))
   }
-  const onUpdate = (item) => {
-    setItems(curItems => {
-      let correspondingItem = curItems.find(it => it.id === item.id);
-      let index = curItems.indexOf(correspondingItem);
-      curItems[index] = { ...item };
-      return curItems;
-    })
+  // const onUpdate = (item) => {
+  //   setItems(curItems => {
+  //     let correspondingItem = curItems.find(it => it.id === item.id);
+  //     let index = curItems.indexOf(correspondingItem);
+  //     curItems[index] = { ...item };
+  //     return curItems;
+  //   })
+  // }
+  function handleToggledItem(itemId) {
+    setItems(curItems => curItems.map(it => itemId === it.id ? { ...it, packed: !it.packed } : it));
+
   }
-  const onChangeList = newItems => {
-    setItems(() => newItems);
-    console.log(newItems);
+  function clearList() {
+    setItems([]);
   }
 
 
@@ -39,11 +40,46 @@ function App() {
       <List
         items={items}
         onDelete={deleteItem}
-        onUpdate={onUpdate}
+        onUpdate={handleToggledItem}
+        clearList={clearList}
       />
+      <Stats items={items} />
+
     </div>);
 
 }
+function Stats({ items }) {
+  if (!items.length) {
+    return (
+      <div className='stats'>
+        Add some items to packing list 🏖️
+      </div>);
+  }
+
+  const numOfItems = items.length;
+  const numOfPacked = items.filter(e => e.packed).length;
+  const packedPercent =
+    Math.round(numOfPacked / numOfItems * 100);
+  if (numOfPacked === numOfItems) {
+    return (
+      <div className='stats'>
+        All Items is packed  you're ready to go 🚀
+      </div>
+    );
+
+  }
+
+  return (<div className='stats' >
+    You've  {numOfItems} items, and packed {numOfPacked} ({packedPercent}%)
+
+  </div >)
+}
+
+
+
+
+
+
 function Logo() {
   return <h1>Travel List App</h1>
 }

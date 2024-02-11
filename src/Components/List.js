@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
-export function List({ items, onDelete, onUpdate, onChangeList }) {
+export function List({ items, onDelete, onUpdate, clearList }) {
     const [sortBy, setSortBy] = useState("amount");
     let sortItems;
     if (sortBy === "amount") sortItems = items.slice().sort((a, b) => a.amount - b.amount);
@@ -29,13 +29,14 @@ export function List({ items, onDelete, onUpdate, onChangeList }) {
                     <option value="name">Sort by name</option>
 
                 </select>
+                <button onClick={clearList}>Clear List</button>
             </div>
         </div>)
 }
 function ListItem({ task, onDelete, onUpdate }) {
     const [isChecked, setIsChecked] = useState(task.packed);
     const handleChecked = e => {
-        onUpdate({ ...task, packed: !isChecked })
+        onUpdate(task.id)
         setIsChecked((i) => !i);
     }
     return <li>
